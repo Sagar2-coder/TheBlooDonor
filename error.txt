@@ -1,0 +1,14 @@
+
+> rest-express@1.0.0 dev
+> cross-env NODE_ENV=development tsx server/index.ts
+
+C:\Users\s1146\Downloads\Donor-Connect\server\routes.ts:4
+import { setupAuth } from "./replit_integrations/auth";
+         ^
+SyntaxError: The requested module './replit_integrations/auth' does not provide an export named 'setupAuth'
+    at #asyncInstantiate (node:internal/modules/esm/module_job:302:21)
+    at async ModuleJob.run (node:internal/modules/esm/module_job:405:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.13.0

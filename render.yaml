@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: donor-connect
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: donor-connect-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+
+databases:
+  - name: donor-connect-db
+    plan: free
+    databaseName: donor_connect
+    user: donor_connect_user
