@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { CalendarIcon, Loader2, Save } from "lucide-react";
+import { CalendarIcon, CheckCircle2, Loader2, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
@@ -143,13 +143,13 @@ export default function Register() {
                         <FormLabel>Blood Group</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
-                            <SelectTrigger className="h-12 bg-gray-50/50">
-                              <SelectValue placeholder="Select group" />
+                            <SelectTrigger className="h-12 bg-white border-2 border-border hover:border-primary/50 transition-colors">
+                              <SelectValue placeholder="Select blood group..." />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="z-[100] border-2 shadow-2xl bg-white">
+                          <SelectContent>
                             {["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"].map((bg) => (
-                              <SelectItem key={bg} value={bg} className="h-10 cursor-pointer hover:bg-gray-100">{bg}</SelectItem>
+                              <SelectItem key={bg} value={bg}>{bg}</SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
@@ -170,20 +170,32 @@ export default function Register() {
                               <Button
                                 variant={"outline"}
                                 className={cn(
-                                  "h-12 w-full pl-3 text-left font-normal bg-gray-50/50 border-input",
-                                  !field.value && "text-muted-foreground"
+                                  "h-12 w-full pl-4 pr-3 text-left font-normal bg-white border-2 transition-colors",
+                                  field.value
+                                    ? "border-green-400 text-foreground hover:border-green-500"
+                                    : "border-border hover:border-primary/50 text-muted-foreground"
                                 )}
                               >
-                                {field.value ? (
-                                  format(new Date(field.value), "PPP")
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                <div className="flex items-center gap-2 flex-1 min-w-0">
+                                  {field.value ? (
+                                    <>
+                                      <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+                                      <span className="text-foreground font-medium">
+                                        {format(new Date(field.value), "dd MMM yyyy")}
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <CalendarIcon className="h-4 w-4 text-muted-foreground shrink-0" />
+                                      <span>Pick a date...</span>
+                                    </>
+                                  )}
+                                </div>
+                                <CalendarIcon className="ml-auto h-4 w-4 text-muted-foreground shrink-0" />
                               </Button>
                             </FormControl>
                           </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0 z-[100] border-2 shadow-2xl bg-white" align="start">
+                          <PopoverContent className="w-auto p-0" align="start">
                             <Calendar
                               mode="single"
                               selected={field.value ? new Date(field.value) : undefined}
@@ -191,8 +203,10 @@ export default function Register() {
                               disabled={(date) =>
                                 date > new Date() || date < new Date("1900-01-01")
                               }
+                              captionLayout="dropdown-buttons"
+                              fromYear={1950}
+                              toYear={new Date().getFullYear()}
                               initialFocus
-                              className="rounded-md border shadow-sm"
                             />
                           </PopoverContent>
                         </Popover>

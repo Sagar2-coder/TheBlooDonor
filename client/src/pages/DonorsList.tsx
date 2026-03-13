@@ -47,7 +47,7 @@ export default function DonorsList() {
             <div className="w-full sm:w-48">
               <label className="text-xs font-semibold text-muted-foreground uppercase mb-1.5 block">Blood Group</label>
               <Select value={bloodGroup} onValueChange={setBloodGroup}>
-                <SelectTrigger className="bg-background">
+                <SelectTrigger className="h-10 bg-white border-2 border-border hover:border-primary/50 transition-colors">
                   <SelectValue placeholder="All Groups" />
                 </SelectTrigger>
                 <SelectContent>
@@ -67,7 +67,7 @@ export default function DonorsList() {
             <div className="w-full sm:w-48">
               <label className="text-xs font-semibold text-muted-foreground uppercase mb-1.5 block">User Type</label>
               <Select value={userType || "all"} onValueChange={(v) => setUserType(v === "all" ? undefined : v as any)}>
-                <SelectTrigger className="bg-background">
+                <SelectTrigger className="h-10 bg-white border-2 border-border hover:border-primary/50 transition-colors">
                   <SelectValue placeholder="All Users" />
                 </SelectTrigger>
                 <SelectContent>
