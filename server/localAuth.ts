@@ -79,6 +79,7 @@ export function setupAuth(app: Express) {
             try {
                 const googleId = profile.id;
                 const email = profile.emails?.[0]?.value;
+                const profileImageUrl = profile.photos?.[0]?.value || null;
 
                 if (!email) return done(new Error("No email found from Google provider"));
 
@@ -88,10 +89,13 @@ export function setupAuth(app: Express) {
                     .limit(1);
 
                 if (existingUser) {
-                    if (!existingUser.googleId) {
-                        // Link Google ID to existing email account
+                    let updateData: any = {};
+                    if (!existingUser.googleId) updateData.googleId = googleId;
+                    if (!existingUser.profileImageUrl && profileImageUrl) updateData.profileImageUrl = profileImageUrl;
+
+                    if (Object.keys(updateData).length > 0) {
                         const [updated] = await db.update(users)
-                            .set({ googleId })
+                            .set(updateData)
                             .where(eq(users.id, existingUser.id))
                             .returning();
                         return done(null, updated);
@@ -106,6 +110,7 @@ export function setupAuth(app: Express) {
                     googleId,
                     firstName: profile.name?.givenName || "",
                     lastName: profile.name?.familyName || "",
+                    profileImageUrl, // Save the Google profile picture
                     role: "user",
                     status: "pending"
                 }).returning();
