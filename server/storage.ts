@@ -1,8 +1,7 @@
 import { donors, type Donor, type InsertDonor } from "@shared/schema";
 import { users, type User } from "@shared/models/auth";
 import { db } from "./db";
-import { eq, lte, and, sql } from "drizzle-orm";
-import { subMonths } from "date-fns";
+import { eq, and, sql } from "drizzle-orm";
 
 export interface IStorage {
   createDonor(donor: InsertDonor & { userId: string }): Promise<Donor>;
@@ -20,18 +19,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getDonors(filters?: { bloodGroup?: string; userType?: "donor" | "receiver"; city?: string }): Promise<Donor[]> {
-    const threeMonthsAgo = subMonths(new Date(), 3);
-    let conditions = [
-      eq(users.status, "approved"),
-      lte(donors.lastDonationDate, threeMonthsAgo.toISOString().split('T')[0])
-    ];
+    let conditions: any[] = [];
 
     if (filters?.bloodGroup) {
       conditions.push(eq(donors.bloodGroup, filters.bloodGroup));
     }
 
     if (filters?.city) {
-      // Case insensitive match would be better but let's stick to simple eq or like if supported.
       conditions.push(sql`lower(${donors.city}) = lower(${filters.city})`);
     }
 
@@ -39,10 +33,13 @@ export class DatabaseStorage implements IStorage {
       conditions.push(eq(donors.userType, filters.userType));
     }
 
-    const results = await db.select({ donor: donors })
+    const query = db.select({ donor: donors })
       .from(donors)
-      .innerJoin(users, eq(donors.userId, users.id))
-      .where(and(...conditions));
+      .innerJoin(users, eq(donors.userId, users.id));
+
+    const results = conditions.length > 0
+      ? await query.where(and(...conditions))
+      : await query;
 
     return results.map(r => r.donor);
   }
