@@ -47,13 +47,10 @@ export async function registerRoutes(
       // Link to authenticated user
       const userId = (req.user as any).id;
 
-      // Check if profile already exists?
+      // Check if profile already exists
       const existing = await storage.getDonorByUserId(userId);
       if (existing) {
-        // Maybe update instead? For now let's just fail or return existing
-        // But the requirement implies registration.
-        // Let's assume create means create new profile.
-        // Ideally we should have an update endpoint too.
+        return res.status(409).json({ message: "You already have a donor profile. Please use the edit profile page to update your information." });
       }
 
       const donor = await storage.createDonor({ ...input, userId });

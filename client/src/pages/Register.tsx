@@ -28,6 +28,7 @@ export default function Register() {
     defaultValues: {
       name: "",
       address: "",
+      city: "",
       bloodGroup: "",
       contactNumber: "",
       userType: "donor",
@@ -112,7 +113,21 @@ export default function Register() {
                     <FormItem>
                       <FormLabel>Address</FormLabel>
                       <FormControl>
-                        <Input placeholder="City, State" {...field} className="h-12 bg-gray-50/50" />
+                        <Input placeholder="123 Main Street" {...field} className="h-12 bg-gray-50/50" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="city"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>City</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Kathmandu" {...field} className="h-12 bg-gray-50/50" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
