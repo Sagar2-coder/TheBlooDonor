@@ -36,14 +36,11 @@ export function setupAuth(app: Express) {
             checkPeriod: 86400000 // prune expired entries every 24h
         }),
         cookie: {
-            secure: app.get("env") === "production",
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
             maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
         },
     };
-
-    if (app.get("env") === "production") {
-        app.set("trust proxy", 1); // trust first proxy
-    }
 
     app.use(session(sessionSettings));
     app.use(passport.initialize());
