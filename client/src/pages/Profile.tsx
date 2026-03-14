@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { CalendarIcon, Loader2, Save } from "lucide-react";
+import { CalendarIcon, CheckCircle2, Loader2, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import { useLocation } from "wouter";
@@ -94,7 +94,7 @@ export default function Profile() {
                                             <FormItem>
                                                 <FormLabel>Full Name</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="John Doe" {...field} className="h-12 bg-gray-50/50" />
+                                                    <Input placeholder="John Doe" {...field} className="h-12 bg-white border-2 border-border focus:border-primary/50 transition-colors" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -108,7 +108,7 @@ export default function Profile() {
                                             <FormItem>
                                                 <FormLabel>Contact Number</FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="+1 234 567 8900" {...field} className="h-12 bg-gray-50/50" />
+                                                    <Input placeholder="+1 234 567 8900" {...field} className="h-12 bg-white border-2 border-border focus:border-primary/50 transition-colors" />
                                                 </FormControl>
                                                 <FormDescription className="text-xs">Only visible to admins</FormDescription>
                                                 <FormMessage />
@@ -124,7 +124,7 @@ export default function Profile() {
                                         <FormItem>
                                             <FormLabel>Address</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="City, State" {...field} className="h-12 bg-gray-50/50" />
+                                                <Input placeholder="City, State" {...field} className="h-12 bg-white border-2 border-border focus:border-primary/50 transition-colors" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -140,7 +140,7 @@ export default function Profile() {
                                                 <FormLabel>Blood Group</FormLabel>
                                                 <Select onValueChange={field.onChange} value={field.value}>
                                                     <FormControl>
-                                                        <SelectTrigger className="h-12 bg-gray-50/50">
+                                                        <SelectTrigger className="h-12 bg-white border-2 border-border hover:border-primary/50 transition-colors">
                                                             <SelectValue placeholder="Select group" />
                                                         </SelectTrigger>
                                                     </FormControl>
@@ -167,16 +167,28 @@ export default function Profile() {
                                                             <Button
                                                                 variant={"outline"}
                                                                 className={cn(
-                                                                    "h-12 w-full pl-3 text-left font-normal bg-gray-50/50 border-input",
-                                                                    !field.value && "text-muted-foreground"
+                                                                    "h-12 w-full pl-4 pr-3 text-left font-normal bg-white border-2 transition-colors",
+                                                                    field.value
+                                                                        ? "border-green-400 text-foreground hover:border-green-500"
+                                                                        : "border-border hover:border-primary/50 text-muted-foreground"
                                                                 )}
                                                             >
-                                                                {field.value ? (
-                                                                    format(new Date(field.value), "PPP")
-                                                                ) : (
-                                                                    <span>Pick a date</span>
-                                                                )}
-                                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                <div className="flex items-center gap-2 flex-1 min-w-0">
+                                                                    {field.value ? (
+                                                                        <>
+                                                                            <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+                                                                            <span className="text-foreground font-medium">
+                                                                                {format(new Date(field.value), "dd MMM yyyy")}
+                                                                            </span>
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <CalendarIcon className="h-4 w-4 text-muted-foreground shrink-0" />
+                                                                            <span>Pick a date...</span>
+                                                                        </>
+                                                                    )}
+                                                                </div>
+                                                                <CalendarIcon className="ml-auto h-4 w-4 text-muted-foreground shrink-0" />
                                                             </Button>
                                                         </FormControl>
                                                     </PopoverTrigger>
@@ -188,6 +200,9 @@ export default function Profile() {
                                                             disabled={(date) =>
                                                                 date > new Date() || date < new Date("1900-01-01")
                                                             }
+                                                            captionLayout="dropdown-buttons"
+                                                            fromYear={1950}
+                                                            toYear={new Date().getFullYear()}
                                                             initialFocus
                                                         />
                                                     </PopoverContent>

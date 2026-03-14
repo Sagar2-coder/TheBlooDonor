@@ -97,7 +97,7 @@ export default function AuthPage() {
                                             required
                                             value={firstName}
                                             onChange={(e) => setFirstName(e.target.value)}
-                                            className="mt-1"
+                                            className="mt-1 h-11 bg-white border-2 border-border focus:border-primary/50 transition-colors"
                                             placeholder="John"
                                         />
                                     </div>
@@ -109,7 +109,7 @@ export default function AuthPage() {
                                             required
                                             value={lastName}
                                             onChange={(e) => setLastName(e.target.value)}
-                                            className="mt-1"
+                                            className="mt-1 h-11 bg-white border-2 border-border focus:border-primary/50 transition-colors"
                                             placeholder="Doe"
                                         />
                                     </div>
@@ -122,7 +122,7 @@ export default function AuthPage() {
                                         required
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="mt-1"
+                                        className="mt-1 h-11 bg-white border-2 border-border focus:border-primary/50 transition-colors"
                                         placeholder="john@example.com"
                                     />
                                 </div>
@@ -136,7 +136,7 @@ export default function AuthPage() {
                                 required
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className="mt-1"
+                                className="mt-1 h-11 bg-white border-2 border-border focus:border-primary/50 transition-colors"
                                 placeholder="Enter your username"
                             />
                         </div>
@@ -148,7 +148,7 @@ export default function AuthPage() {
                                 required
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="mt-1"
+                                className="mt-1 h-11 bg-white border-2 border-border focus:border-primary/50 transition-colors"
                                 placeholder="Enter your password"
                             />
                         </div>
