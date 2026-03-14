@@ -15,7 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { format } from "date-fns";
 import { CalendarIcon, CheckCircle2, Loader2, Save } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 
@@ -158,59 +158,65 @@ export default function Profile() {
                                     <FormField
                                         control={form.control}
                                         name="lastDonationDate"
-                                        render={({ field }) => (
-                                            <FormItem className="flex flex-col">
-                                                <FormLabel>Last Donation Date</FormLabel>
-                                                <Popover>
-                                                    <PopoverTrigger asChild>
-                                                        <FormControl>
-                                                            <Button
-                                                                variant={"outline"}
-                                                                className={cn(
-                                                                    "h-12 w-full pl-4 pr-3 text-left font-normal bg-white border-2 transition-colors",
-                                                                    field.value
-                                                                        ? "border-green-400 text-foreground hover:border-green-500"
-                                                                        : "border-border hover:border-primary/50 text-muted-foreground"
-                                                                )}
-                                                            >
-                                                                <div className="flex items-center gap-2 flex-1 min-w-0">
-                                                                    {field.value ? (
-                                                                        <>
-                                                                            <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
-                                                                            <span className="text-foreground font-medium">
-                                                                                {format(new Date(field.value), "dd MMM yyyy")}
-                                                                            </span>
-                                                                        </>
-                                                                    ) : (
-                                                                        <>
-                                                                            <CalendarIcon className="h-4 w-4 text-muted-foreground shrink-0" />
-                                                                            <span>Pick a date...</span>
-                                                                        </>
+                                        render={({ field }) => {
+                                            const [isOpen, setIsOpen] = useState(false);
+                                            return (
+                                                <FormItem className="flex flex-col">
+                                                    <FormLabel>Last Donation Date</FormLabel>
+                                                    <Popover open={isOpen} onOpenChange={setIsOpen}>
+                                                        <PopoverTrigger asChild>
+                                                            <FormControl>
+                                                                <Button
+                                                                    variant={"outline"}
+                                                                    className={cn(
+                                                                        "h-12 w-full pl-4 pr-3 text-left font-normal bg-white border-2 transition-colors",
+                                                                        field.value
+                                                                            ? "border-green-400 text-foreground hover:border-green-500"
+                                                                            : "border-border hover:border-primary/50 text-muted-foreground"
                                                                     )}
-                                                                </div>
-                                                                <CalendarIcon className="ml-auto h-4 w-4 text-muted-foreground shrink-0" />
-                                                            </Button>
-                                                        </FormControl>
-                                                    </PopoverTrigger>
-                                                    <PopoverContent className="w-auto p-0" align="start">
-                                                        <Calendar
-                                                            mode="single"
-                                                            selected={field.value ? new Date(field.value) : undefined}
-                                                            onSelect={(date) => field.onChange(date ? format(date, "yyyy-MM-dd") : "")}
-                                                            disabled={(date) =>
-                                                                date > new Date() || date < new Date("1900-01-01")
-                                                            }
-                                                            captionLayout="dropdown-buttons"
-                                                            fromYear={1950}
-                                                            toYear={new Date().getFullYear()}
-                                                            initialFocus
-                                                        />
-                                                    </PopoverContent>
-                                                </Popover>
-                                                <FormDescription>Used to calculate eligibility (3 months rule)</FormDescription>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
+                                                                >
+                                                                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                                                                        {field.value ? (
+                                                                            <>
+                                                                                <CheckCircle2 className="h-4 w-4 text-green-500 shrink-0" />
+                                                                                <span className="text-foreground font-medium">
+                                                                                    {format(new Date(field.value), "dd MMM yyyy")}
+                                                                                </span>
+                                                                            </>
+                                                                        ) : (
+                                                                            <>
+                                                                                <CalendarIcon className="h-4 w-4 text-muted-foreground shrink-0" />
+                                                                                <span>Pick a date...</span>
+                                                                            </>
+                                                                        )}
+                                                                    </div>
+                                                                    <CalendarIcon className="ml-auto h-4 w-4 text-muted-foreground shrink-0" />
+                                                                </Button>
+                                                            </FormControl>
+                                                        </PopoverTrigger>
+                                                        <PopoverContent className="w-auto p-0" align="start">
+                                                            <Calendar
+                                                                mode="single"
+                                                                selected={field.value ? new Date(field.value) : undefined}
+                                                                onSelect={(date) => {
+                                                                    field.onChange(date ? format(date, "yyyy-MM-dd") : "");
+                                                                    setIsOpen(false);
+                                                                }}
+                                                                disabled={(date) =>
+                                                                    date > new Date() || date < new Date("1900-01-01")
+                                                                }
+                                                                captionLayout="dropdown-buttons"
+                                                                fromYear={1950}
+                                                                toYear={new Date().getFullYear()}
+                                                                initialFocus
+                                                            />
+                                                        </PopoverContent>
+                                                    </Popover>
+                                                    <FormDescription>Used to calculate eligibility (3 months rule)</FormDescription>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            );
+                                        }}
                                     />
                                 </div>
 
