@@ -31,6 +31,7 @@ export default function Profile() {
         defaultValues: {
             name: "",
             address: "",
+            city: "",
             bloodGroup: "",
             contactNumber: "",
             userType: "donor",
@@ -43,6 +44,7 @@ export default function Profile() {
             form.reset({
                 name: profile.name,
                 address: profile.address,
+                city: profile.city,
                 bloodGroup: profile.bloodGroup,
                 contactNumber: profile.contactNumber,
                 userType: profile.userType as "donor" | "receiver",
@@ -58,7 +60,11 @@ export default function Profile() {
     }, [authLoading, isAuthenticated, setLocation]);
 
     const onSubmit = (data: InsertDonor) => {
-        updateDonor.mutate(data);
+        updateDonor.mutate(data, {
+            onSuccess: () => {
+                setLocation("/");
+            }
+        });
     };
 
     if (authLoading || profileLoading) {
@@ -117,19 +123,35 @@ export default function Profile() {
                                     />
                                 </div>
 
-                                <FormField
-                                    control={form.control}
-                                    name="address"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Address</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="City, State" {...field} className="h-12 bg-white border-2 border-border focus:border-primary/50 transition-colors" />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    <FormField
+                                        control={form.control}
+                                        name="address"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Address</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="123 Main Street" {...field} className="h-12 bg-white border-2 border-border focus:border-primary/50 transition-colors" />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="city"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>City</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Kathmandu" {...field} className="h-12 bg-white border-2 border-border focus:border-primary/50 transition-colors" />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </div>
 
                                 <div className="grid md:grid-cols-2 gap-6">
                                     <FormField
