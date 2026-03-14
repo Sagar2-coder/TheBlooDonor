@@ -22,6 +22,8 @@ export default function Register() {
   const { isAuthenticated, isLoading: authLoading, user } = useAuth();
   const [, setLocation] = useLocation();
   const createDonor = useCreateDonor();
+  const { data: profile, isLoading: profileLoading } = useMyProfile();
+  const { toast } = useToast();
 
   const form = useForm<InsertDonor>({
     resolver: zodResolver(insertDonorSchema),
@@ -48,7 +50,15 @@ export default function Register() {
     if (!authLoading && !isAuthenticated) {
       setLocation("/auth");
     }
-  }, [authLoading, isAuthenticated, setLocation]);
+    // Redirect if already has a profile
+    if (!profileLoading && profile) {
+      toast({
+        title: "Profile Found",
+        description: "You already have a profile. Taking you there...",
+      });
+      setLocation("/profile");
+    }
+  }, [authLoading, isAuthenticated, profileLoading, profile, setLocation, toast]);
 
   const onSubmit = (data: InsertDonor) => {
     createDonor.mutate(data, {
@@ -83,7 +93,7 @@ export default function Register() {
                       <FormItem>
                         <FormLabel>Full Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="John Doe" {...field} className="h-12 bg-gray-50/50" />
+                          <Input placeholder="John Doe" {...field} className="h-12 bg-white border-2 border-border focus:border-primary/50 transition-colors" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -97,7 +107,7 @@ export default function Register() {
                       <FormItem>
                         <FormLabel>Contact Number</FormLabel>
                         <FormControl>
-                          <Input placeholder="+1 234 567 8900" {...field} className="h-12 bg-gray-50/50" />
+                          <Input placeholder="+1 234 567 8900" {...field} className="h-12 bg-white border-2 border-border focus:border-primary/50 transition-colors" />
                         </FormControl>
                         <FormDescription className="text-xs">Only visible to admins</FormDescription>
                         <FormMessage />
@@ -113,7 +123,7 @@ export default function Register() {
                     <FormItem>
                       <FormLabel>Address</FormLabel>
                       <FormControl>
-                        <Input placeholder="123 Main Street" {...field} className="h-12 bg-gray-50/50" />
+                        <Input placeholder="123 Main Street" {...field} className="h-12 bg-white border-2 border-border focus:border-primary/50 transition-colors" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -127,7 +137,7 @@ export default function Register() {
                     <FormItem>
                       <FormLabel>City</FormLabel>
                       <FormControl>
-                        <Input placeholder="Kathmandu" {...field} className="h-12 bg-gray-50/50" />
+                        <Input placeholder="Kathmandu" {...field} className="h-12 bg-white border-2 border-border focus:border-primary/50 transition-colors" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

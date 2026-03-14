@@ -53,12 +53,16 @@ export function useCreateDonor() {
       });
 
       if (!res.ok) {
-        if (res.status === 400) {
-          const error = api.donors.create.responses[400].parse(await res.json());
-          throw new Error(error.message);
+        let errorMessage = "Failed to create profile";
+        try {
+          const errorData = await res.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          // Fallback to default message
         }
+
         if (res.status === 401) throw new Error("You must be logged in to register");
-        throw new Error("Failed to create profile");
+        throw new Error(errorMessage);
       }
       return api.donors.create.responses[201].parse(await res.json());
     },
