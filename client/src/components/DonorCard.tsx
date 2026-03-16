@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Calendar, Droplet, User } from "lucide-react";
 import type { PublicDonorInfo } from "@shared/schema";
+import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 
 interface DonorCardProps {
@@ -42,19 +43,29 @@ export function DonorCard({ donor }: DonorCardProps) {
             <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-primary/60" />
             <span className="line-clamp-2">{donor.address}</span>
           </div>
-          
+
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <Calendar className="h-4 w-4 shrink-0 text-primary/60" />
             <span>Last Donation: {format(new Date(donor.lastDonationDate), "MMM d, yyyy")}</span>
           </div>
 
-          <div className="pt-4 mt-4 border-t border-dashed border-border flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div className="pt-4 mt-4 border-t border-dashed border-border flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2 shrink-0">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               <span className="text-xs font-medium text-green-600">Available</span>
             </div>
-            {/* Note: Contact number is hidden for public privacy */}
-            <span className="text-xs text-muted-foreground italic">Contact info protected</span>
+
+            <Button
+              size="sm"
+              className="w-full h-9 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white border-0 shadow-lg shadow-[#25D366]/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              onClick={() => {
+                const message = `Hello, I'm interested in ${isDonor ? 'requesting blood from' : 'donating blood to'} ${donor.name} (${donor.bloodGroup}) listed on TheBlooDonor.`;
+                window.open(`https://wa.me/9779819079020?text=${encodeURIComponent(message)}`, '_blank');
+              }}
+            >
+              <Droplet className="w-3.5 h-3.5 mr-2" />
+              Request
+            </Button>
           </div>
         </div>
       </CardContent>
